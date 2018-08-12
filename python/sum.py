@@ -9,4 +9,4 @@ j=0
 while j <=100:
 	result = result + j
 	j=j+1
-print result
+print(result)
