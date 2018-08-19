@@ -55,19 +55,19 @@ def get_area():
     :return: list
     """
     res=[]
-    url = 'https://sz.lianjia.com/xiaoqu/'
-    domain = 'https://sz.lianjia.com'
+    url = 'https://bj.lianjia.com/xiaoqu/'
+    domain = 'https://bj.lianjia.com'
     webdata = req(url)#请求到网页
     soup = BeautifulSoup(webdata.text,'lxml')#获取全部网页内容
     areas = soup.select('div.position dl dd div a')#抓区小区信息路径，不同级的加空格
     for area,url_ in  [[i.get_text(),domain+i.get('href')] for i in areas]:#get_text只获得文本内容，get()获得对应属性标签，因此domin+i.get(‘href')则进入对应区域网页
         print(url_)#打印出所有区域的网址
-        res.extend(get_area_1(url_))#————————————————
+        res.extend(get_area_1(url_))#
     return res#返回到列表
 
 def get_area_1(url):
     #得到某个大区下面各个小区域
-    domain = 'https://sz.lianjia.com'
+    domain = 'https://bj.lianjia.com'
     webdata = req(url)#请求到网页
     soup = BeautifulSoup(webdata.text, 'lxml')
     areas = soup.select('div.position dl dd > div > div:nth-of-type(2) a')#:nth-of-type(n) 选择器匹配属于父元素的特定类型的第 N 个子元素的每个元素.也就是子区域
@@ -81,7 +81,7 @@ def get_xiaoqu(areas):
     :param areas:dict()
     :return:dict()
     """
-    res = []
+    res = []#在上个部分res时子区域+URL的列表，此处为空吗？
     for area,url in areas:
         #得到某个子区域下面的所有小区
         webdata = req(url)
@@ -122,9 +122,10 @@ def crawl_xiaoqu():
     print("LOG: {} start crawl xiaoqu!".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))#作用是格式化时间戳为本地的时间。In [13]: time.localtime();Out[13]: time.struct_time(tm_year=2018, tm_mon=1, tm_mday=12, tm_hour=23, tm_min=6, tm_sec=14, tm_wday=4, tm_yday=12, tm_isdst=0)
     areas=get_area()#区域等于区域1
     xiaoqulist  = get_xiaoqu(areas)#对应的区域小区列表
-    df = pd.DataFrame(xiaoqulist)#把小区列表转换为数据结构
-    df.to_excel('小区信息.xlsx')#储存为excel
-    print("LOG: {} finish crawl xiaoqu!".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))#抓取结束标注#抓取各小区详细信息
+    print(xiaoqulist)
+    # df = pd.DataFrame(xiaoqulist)#把小区列表转换为数据结构
+    # df.to_excel('小区信息.xlsx')#储存为excel
+    # print("LOG: {} finish crawl xiaoqu!".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))#抓取结束标注#抓取各小区详细信息
 def crawl_xiaoqu_info():
     xiaoqu = pd.read_excel('小区信息.xlsx')#把上述的小区列表转为数据结构
     for index, item in xiaoqu.iterrows():#历遍上述数据结构的内容，输出为元组
@@ -274,7 +275,7 @@ def merge_data():
         res = pd.concat(dfs)
         res.to_excel(sheet + '.xlsx',index=False)
 
-if __name__=='__main__':
+if __name__=='__main__':#此部分为运行脚本的条件，当此脚本被单独运行时，执行下列程序
     crawl_xiaoqu()
     # crawl_xiaoqu_info()
     # merge_data()
