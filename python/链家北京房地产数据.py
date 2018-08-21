@@ -63,7 +63,7 @@ def get_area():
     for area,url_ in  [[i.get_text(),domain+i.get('href')] for i in areas]:#get_text只获得文本内容，get()获得对应属性标签，因此domin+i.get(‘href')则进入对应区域网页
         print(url_)#打印出所有区域的网址
         res.extend(get_area_1(url_))#
-    return res#返回到列表
+        return res#返回到列表
 
 def get_area_1(url):
     #得到某个大区下面各个小区域
@@ -116,7 +116,9 @@ def get_xiaoqu(areas):
                 tmp.append(data)#append() 方法用于在列表末尾添加新的对象。
             res.extend(tmp)#list.extend(seq)，函数用于在列表末尾一次性追加另一个序列中的多个值（用新列表扩展原来的列表）
         print(area,'finished!')
-    return res
+        return res#——
+
+#——————————————————————————————————————————————————————————
 
 def crawl_xiaoqu():
     print("LOG: {} start crawl xiaoqu!".format(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())))#作用是格式化时间戳为本地的时间。In [13]: time.localtime();Out[13]: time.struct_time(tm_year=2018, tm_mon=1, tm_mday=12, tm_hour=23, tm_min=6, tm_sec=14, tm_wday=4, tm_yday=12, tm_isdst=0)
@@ -194,7 +196,8 @@ def crawl_one_xiaoqu(xiaoquinfo):
             ershoufang.append(data)
     pprint.pprint(ershoufang)
     pd.DataFrame(ershoufang).to_excel(Writer,'ershoufang')
-
+#我们用中括号来定义一个list列表，这里注意不能用list来表示我们常说的“数组”，数组的定义需要用到numpy,例如你定义一个变量：
+#代表dict字典数据类型，字典是由键对值组组成。冒号':'分开键和值，逗号','隔开组。用大括号创建的方法如下：
     #成交
     url_chengjiao = xiaoquinfo['url'].replace('xiaoqu/', 'chengjiao/c')
     chengjiao=[]
